@@ -1,4 +1,6 @@
 import { SignInButton } from '@clerk/nextjs';
+import Link from 'next/link';
+
 
 const Guest = () => {
   return (
@@ -21,8 +23,8 @@ const Guest = () => {
             </span>
           </h1>
           <p className='text-base sm:text-lg md:text-xl lg:text-2xl mb-6 sm:mb-8 text-gray-600 dark:text-gray-400 leading-relaxed max-w-3xl mx-auto px-2 sm:px-0'>
-            Track your expenses, manage your budget, and get AI-powered insights
-            to take control of your finances with intelligent automation.
+            Enhance your interview preparation, refine your responses, and receive AI-driven feedback
+            to boost your confidence and performance with Evalune.
           </p>
           <div className='flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-8 sm:mb-12 px-2 sm:px-0'>
             <SignInButton>
@@ -34,9 +36,12 @@ const Guest = () => {
                 <div className='absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200'></div>
               </button>
             </SignInButton>
-            <button className='group border-2 border-emerald-500/20 dark:border-emerald-400/20 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 px-6 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-2xl font-semibold transition-all duration-200 backdrop-blur-sm'>
+            <Link
+              href='/contact'
+              className='group border-2 border-emerald-500/20 dark:border-emerald-400/20 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 px-6 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-2xl font-semibold transition-all duration-200 backdrop-blur-sm'
+            >
               Learn More
-            </button>
+            </Link>
           </div>
 
           {/* Feature highlights */}
@@ -49,7 +54,7 @@ const Guest = () => {
                 AI Insights
               </h3>
               <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-400 text-center'>
-                Smart analysis of your spending patterns
+                AI-driven evaluation of your interview responses
               </p>
             </div>
             <div className='bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-4 sm:p-6 rounded-xl sm:rounded-2xl shadow-lg border border-gray-100/50 dark:border-gray-700/50'>
@@ -57,10 +62,10 @@ const Guest = () => {
                 <span className='text-white text-base sm:text-lg'>✨</span>
               </div>
               <h3 className='text-base sm:text-lg font-bold text-gray-900 dark:text-gray-100 mb-2 text-center'>
-                Auto Categories
+                Auto Question Generation
               </h3>
               <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-400 text-center'>
-                Intelligent expense categorization
+                Intelligent interview question creation based on your resume
               </p>
             </div>
             <div className='bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-4 sm:p-6 rounded-xl sm:rounded-2xl shadow-lg border border-gray-100/50 dark:border-gray-700/50 sm:col-span-2 md:col-span-1'>
@@ -71,7 +76,7 @@ const Guest = () => {
                 Smart Dashboard
               </h3>
               <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-400 text-center'>
-                Beautiful, intuitive financial overview
+                Beautiful, intuitive overview of your interview performance and progress
               </p>
             </div>
           </div>
@@ -94,8 +99,7 @@ const Guest = () => {
               </span>
             </h2>
             <p className='text-sm sm:text-base md:text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto px-2 sm:px-0'>
-              Everything you need to know about ExpenseTracker AI and how it can
-              transform your financial management.
+              Everything you need to know about Evalune and how it can help you improve your interview skills.
             </p>
           </div>
 
@@ -107,14 +111,13 @@ const Guest = () => {
                 </div>
                 <div className='flex-1'>
                   <h3 className='text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3'>
-                    What is ExpenseTracker AI?
+                    What is Evalune?
                   </h3>
                   <p className='text-sm sm:text-base text-gray-600 dark:text-gray-400 leading-relaxed'>
-                    ExpenseTracker AI is an intelligent financial management
-                    tool that uses artificial intelligence to help you monitor
-                    your spending patterns, get smart category suggestions, and
-                    receive personalized insights to improve your financial
-                    health.
+                    Evalune is an intelligent platform that simulates real HR interviews.
+                    It analyzes your resume, generates personalized interview questions, 
+                    evaluates your responses, and provides detailed feedback to help you 
+                    enhance your interview performance.
                   </p>
                 </div>
               </div>
@@ -130,11 +133,10 @@ const Guest = () => {
                     How does the AI work?
                   </h3>
                   <p className='text-sm sm:text-base text-gray-600 dark:text-gray-400 leading-relaxed'>
-                    Our AI analyzes your spending data to automatically
-                    categorize expenses, detect patterns, and provide
-                    personalized recommendations. You can also ask the AI
-                    questions about your spending habits and get instant,
-                    intelligent responses.
+                    Our AI reviews your resume to create relevant interview questions. 
+                    You record your answers, which are converted to text and analyzed. 
+                    The system then provides insights, feedback, and tips to improve your 
+                    answers and overall communication skills.
                   </p>
                 </div>
               </div>
@@ -147,13 +149,13 @@ const Guest = () => {
                 </div>
                 <div className='flex-1'>
                   <h3 className='text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3'>
-                    Is ExpenseTracker AI free?
+                    Is Evalune free?
                   </h3>
                   <p className='text-sm sm:text-base text-gray-600 dark:text-gray-400 leading-relaxed'>
-                    Yes, ExpenseTracker AI offers a free plan with basic AI
-                    features including smart categorization and insights.
-                    Premium plans are available for advanced AI analytics and
-                    unlimited AI interactions.
+                    Yes! Evalune is completely free for students preparing for interviews. 
+                    All features, including resume analysis, question generation, 
+                    voice-to-text evaluation, and progress tracking, are available 
+                    with no paid versions.
                   </p>
                 </div>
               </div>
@@ -177,8 +179,7 @@ const Guest = () => {
               </span>
             </h2>
             <p className='text-sm sm:text-base md:text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto px-2 sm:px-0'>
-              Join thousands of satisfied users who have transformed their
-              financial habits with ExpenseTracker AI.
+              Join thousands of students who have boosted their interview confidence with Evalune.
             </p>
           </div>
 
@@ -194,7 +195,7 @@ const Guest = () => {
                   </div>
                   <div>
                     <div className='font-bold text-gray-900 dark:text-gray-100 text-sm sm:text-base'>
-                      Sarah L.
+                      Saran S.
                     </div>
                     <div className='text-xs sm:text-sm text-gray-500 dark:text-gray-400'>
                       Verified User
@@ -202,9 +203,9 @@ const Guest = () => {
                   </div>
                 </div>
                 <p className='text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-4'>
-                  &ldquo;ExpenseTracker AI has completely transformed my
-                  budgeting. The AI insights are incredibly helpful and I now
-                  have full control over my finances!&rdquo;
+                  &ldquo;Evalune made my interview preparation so much easier. 
+                  The AI feedback helped me identify my weak points, 
+                  and I feel way more confident now!&rdquo;
                 </p>
                 <div className='flex text-emerald-500 text-xs sm:text-sm'>
                   ⭐⭐⭐⭐⭐
@@ -218,12 +219,12 @@ const Guest = () => {
                 <div className='flex items-center gap-3 mb-4'>
                   <div className='w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-green-500 via-teal-500 to-emerald-500 rounded-full flex items-center justify-center shadow-lg'>
                     <span className='text-white text-xs sm:text-sm font-bold'>
-                      J
+                      P
                     </span>
                   </div>
                   <div>
                     <div className='font-bold text-gray-900 dark:text-gray-100 text-sm sm:text-base'>
-                      John D.
+                      Pugzhal P.
                     </div>
                     <div className='text-xs sm:text-sm text-gray-500 dark:text-gray-400'>
                       Verified User
@@ -231,9 +232,9 @@ const Guest = () => {
                   </div>
                 </div>
                 <p className='text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-4'>
-                  &ldquo;The AI-powered insights from ExpenseTracker have helped
-                  me identify and reduce unnecessary spending. The smart
-                  categorization is amazing!&rdquo;
+                  &ldquo;The personalized questions and detailed AI analysis 
+                  from Evalune were a game-changer. I could practice effectively 
+                  and track my progress over time!&rdquo;
                 </p>
                 <div className='flex text-emerald-500 text-xs sm:text-sm'>
                   ⭐⭐⭐⭐⭐
@@ -247,12 +248,12 @@ const Guest = () => {
                 <div className='flex items-center gap-3 mb-4'>
                   <div className='w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-teal-500 via-emerald-500 to-green-500 rounded-full flex items-center justify-center shadow-lg'>
                     <span className='text-white text-xs sm:text-sm font-bold'>
-                      E
+                      S
                     </span>
                   </div>
                   <div>
                     <div className='font-bold text-gray-900 dark:text-gray-100 text-sm sm:text-base'>
-                      Emily R.
+                      Srinath P.
                     </div>
                     <div className='text-xs sm:text-sm text-gray-500 dark:text-gray-400'>
                       Verified User
@@ -260,9 +261,9 @@ const Guest = () => {
                   </div>
                 </div>
                 <p className='text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-4'>
-                  &ldquo;ExpenseTracker AI is so intelligent and easy to use.
-                  The AI recommendations are spot-on and have genuinely improved
-                  my financial habits!&rdquo;
+                  &ldquo;Evalune is incredibly intuitive and smart. 
+                  The AI feedback is precise, and it really helped me 
+                  improve my answers and communication skills!&rdquo;
                 </p>
                 <div className='flex text-emerald-500 text-xs sm:text-sm'>
                   ⭐⭐⭐⭐⭐

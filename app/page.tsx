@@ -1,105 +1,102 @@
-import AddNewRecord from '@/components/AddNewRecord';
-import AIInsights from '@/components/AIInsights';
-import ExpenseStats from '@/components/ExpenseStats';
-import Guest from '@/components/Guest';
-import RecordChart from '@/components/RecordChart';
-import RecordHistory from '@/components/RecordHistory';
-import { currentUser } from '@clerk/nextjs/server';
+"use client";
 
-export default async function HomePage() {
-  const user = await currentUser();
-  if (!user) {
-    return <Guest />;
-  }
+import Guest from "@/components/Guest";
+import Resume from "@/components/Resume";
+import Interview from "@/components/Interview";
+import { useUser } from "@clerk/nextjs";
+import { useState, useEffect } from "react";
+
+export default function HomePage() {
+  const { user } = useUser();
+  const [resumeId, setResumeId] = useState<string | null>(null);
+
+  // Enable smooth scroll globally
+  useEffect(() => {
+    document.documentElement.style.scrollBehavior = "smooth";
+    return () => {
+      document.documentElement.style.scrollBehavior = "";
+    };
+  }, []);
+
+  if (!user) return <Guest />;
+
   return (
-    <main className='bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans min-h-screen transition-colors duration-300'>
-      {/* Mobile-optimized container with responsive padding */}
-      <div className='max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8'>
-        {/* Mobile-first responsive grid */}
-        <div className='grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6'>
-          {/* Left Column - Stacked on mobile */}
-          <div className='space-y-4 sm:space-y-6'>
-            {/* Welcome section with improved mobile layout */}
-            <div className='bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-4 sm:p-6 lg:p-8 rounded-2xl shadow-xl border border-gray-100/50 dark:border-gray-700/50 hover:shadow-2xl flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6'>
-              {/* User Image - responsive sizing */}
-              <div className='relative flex-shrink-0'>
-                <img
-                  src={user.imageUrl}
-                  alt={`${user.firstName}&#39;s profile`}
-                  className='w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border-2 border-white dark:border-gray-600 shadow-lg'
-                />
-                <div className='absolute -bottom-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-r from-green-400 to-green-500 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center'>
-                  <span className='text-white text-xs'>✓</span>
-                </div>
-              </div>
+    <main className="font-sans bg-gradient-to-br from-gray-50 via-white to-emerald-50 dark:from-gray-950 dark:via-gray-900 dark:to-emerald-900/20 text-gray-800 dark:text-gray-200 transition-colors duration-300 min-h-screen overflow-hidden">
+      {/* Hero Section */}
+      <section className="relative w-full max-w-6xl mx-auto px-6 py-20 sm:py-28 flex flex-col items-center text-center">
+        {/* Background */}
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-200/40 via-green-200/20 to-teal-300/30 dark:from-emerald-900/40 dark:via-green-800/20 dark:to-teal-900/40 animate-gradient-xy"></div>
+        </div>
 
-              {/* User Details - responsive text and layout */}
-              <div className='flex-1 text-center sm:text-left'>
-                <div className='flex flex-col sm:flex-row items-center sm:items-start justify-center sm:justify-start gap-2 sm:gap-3 mb-3'>
-                  <div className='w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-emerald-500 via-green-500 to-teal-500 rounded-xl flex items-center justify-center shadow-lg'>
-                    <span className='text-white text-sm sm:text-lg'>👋</span>
-                  </div>
-                  <h2 className='text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-gray-100'>
-                    Welcome Back, {user.firstName}!
-                  </h2>
-                </div>
-                <p className='text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-4 sm:mb-6 max-w-md mx-auto sm:mx-0'>
-                  Here&#39;s a quick overview of your recent expense activity.
-                  Track your spending, analyze patterns, and manage your budget
-                  efficiently!
-                </p>
-                {/* Mobile-optimized badge grid */}
-                <div className='flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center sm:justify-start'>
-                  <div className='bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-900/30 dark:to-green-900/30 border border-emerald-100 dark:border-emerald-800 px-3 py-2 rounded-xl flex items-center gap-2 justify-center sm:justify-start'>
-                    <div className='w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-r from-emerald-500 to-green-500 rounded-lg flex items-center justify-center flex-shrink-0'>
-                      <span className='text-white text-xs'>📅</span>
-                    </div>
-                    <div className='text-center sm:text-left'>
-                      <span className='text-xs font-medium text-gray-500 dark:text-gray-400 block'>
-                        Joined
-                      </span>
-                      <span className='text-sm font-semibold text-gray-800 dark:text-gray-200'>
-                        {new Date(user.createdAt).toLocaleDateString()}
-                      </span>
-                    </div>
-                  </div>
-                  <div className='bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border border-green-100 dark:border-green-800 px-3 py-2 rounded-xl flex items-center gap-2 justify-center sm:justify-start'>
-                    <div className='w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center flex-shrink-0'>
-                      <span className='text-white text-xs'>⚡</span>
-                    </div>
-                    <div className='text-center sm:text-left'>
-                      <span className='text-xs font-medium text-gray-500 dark:text-gray-400 block'>
-                        Last Active
-                      </span>
-                      <span className='text-sm font-semibold text-gray-800 dark:text-gray-200'>
-                        {user.lastActiveAt
-                          ? new Date(user.lastActiveAt).toLocaleDateString()
-                          : 'Today'}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* Add New Expense */}
-            <AddNewRecord />
-          </div>
-
-          {/* Right Column - Stacked below on mobile */}
-          <div className='space-y-4 sm:space-y-6'>
-            {/* Expense Analytics */}
-            <RecordChart />
-            
-            <ExpenseStats />
+        {/* Profile Avatar */}
+        <div className="relative">
+          <div className="absolute inset-0 w-36 h-36 sm:w-44 sm:h-44 rounded-full bg-gradient-to-r from-emerald-400 to-green-500 blur-2xl opacity-60 animate-pulse"></div>
+          <img
+            src={user.imageUrl!}
+            alt={`${user.firstName}'s profile`}
+            className="relative w-28 h-28 sm:w-36 sm:h-36 rounded-full border-4 border-white dark:border-gray-800 shadow-2xl object-cover z-10"
+          />
+          <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center shadow-lg z-20">
+            <span className="text-white text-sm">✓</span>
           </div>
         </div>
 
-        {/* Full-width sections below - mobile-friendly spacing */}
-        <div className='mt-6 sm:mt-8 space-y-4 sm:space-y-6'>
-          <AIInsights />
-          <RecordHistory />
-        </div>
-      </div>
+        {/* Welcome */}
+        <h1 className="mt-8 text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight">
+          <span className="bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500 text-transparent bg-clip-text animate-gradient">
+            Welcome Back, {user.firstName}! 🌟
+          </span>
+        </h1>
+
+        <p className="mt-4 max-w-2xl text-gray-600 dark:text-gray-400 text-base sm:text-lg leading-relaxed">
+          Upload your resume, get smart interview questions, answer with audio, and
+          receive instant AI feedback to sharpen your skills.
+        </p>
+
+        {/* CTA */}
+        <a
+          href="#resume-section"
+          className="mt-8 px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-600 via-green-500 to-teal-500 hover:from-emerald-700 hover:via-green-600 hover:to-teal-600 text-white font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+        >
+          Upload Resume
+        </a>
+
+        {/* Gradient Animation */}
+        <style jsx>{`
+          @keyframes gradient-xy {
+            0%, 100% {
+              background-position: 0% 0%;
+            }
+            50% {
+              background-position: 100% 100%;
+            }
+          }
+          .animate-gradient-xy {
+            background-size: 200% 200%;
+            animation: gradient-xy 12s ease infinite;
+          }
+        `}</style>
+      </section>
+
+      {/* Resume Upload */}
+      <section
+        id="resume-section"
+        className="relative py-16 px-6 max-w-5xl mx-auto w-full"
+      >
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500"></div>
+        <Resume onUploaded={(id) => setResumeId(id)} />
+      </section>
+
+      {/* Interview Section */}
+      {resumeId && (
+        <section
+          id="interview-section"
+          className="relative py-16 px-6 max-w-5xl mx-auto w-full"
+        >
+          <Interview resumeId={resumeId} />
+        </section>
+      )}
     </main>
   );
 }

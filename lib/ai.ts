@@ -1,231 +1,189 @@
-import OpenAI from 'openai';
+// lib/ai.ts
+import OpenAI from "openai";
 
-interface RawInsight {
-  type?: string;
-  title?: string;
-  message?: string;
-  action?: string;
-  confidence?: number;
-}
-
-const openai = new OpenAI({
-  baseURL: 'https://openrouter.ai/api/v1',
-  apiKey: process.env.OPENROUTER_API_KEY || process.env.OPENAI_API_KEY,
+/**
+ * OpenRouter client (for free LLMs like Mistral, LLaMA, etc.)
+ */
+export const openrouter = new OpenAI({
+  baseURL: "https://openrouter.ai/api/v1",
+  apiKey: process.env.OPENROUTER_API_KEY,
   defaultHeaders: {
-    'HTTP-Referer': process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
-    'X-Title': 'ExpenseTracker AI',
+    "HTTP-Referer": process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+    "X-Title": "Virtual Interview",
   },
 });
 
-export interface ExpenseRecord {
-  id: string;
-  amount: number;
-  category: string;
-  description: string;
-  date: string;
+// -------------------------------
+// Free LLM models (fallback order)
+// -------------------------------
+const FREE_MODELS = [
+  "mistralai/mistral-7b-instruct:free",
+  "meta-llama/llama-3-8b-instruct:free",
+  "mistralai/mixtral-8x7b-instruct:free",
+];
+
+/**
+ * Run OpenRouter call with model fallback
+ */
+async function runWithFallback(messages: any[], temperature = 0.4): Promise<string> {
+  for (const model of FREE_MODELS) {
+    try {
+      const r = await openrouter.chat.completions.create({
+        model,
+        messages,
+        temperature,
+      });
+      return r.choices[0]?.message?.content?.trim() || "";
+    } catch (err: any) {
+      console.warn(`⚠️ ${model} failed:`, err.message || err);
+      await new Promise((res) => setTimeout(res, 1200));
+    }
+  }
+  return "";
 }
 
-export interface AIInsight {
-  id: string;
-  type: 'warning' | 'info' | 'success' | 'tip';
-  title: string;
-  message: string;
-  action?: string;
-  confidence: number;
-}
+/**
+ * Generate 4–6 interview questions from parsed resume JSON
+ */
+export async function generateQuestionsFromResume(parsed: any): Promise<string[]> {
+  const prompt = `
+You are an interview coach. Generate 4-6 targeted interview questions based on this resume JSON.
 
-export async function generateExpenseInsights(
-  expenses: ExpenseRecord[]
-): Promise<AIInsight[]> {
+Return ONLY a JSON array of strings.
+
+Resume JSON:
+${JSON.stringify(parsed, null, 2)}
+`;
+
+  const text = await runWithFallback(
+    [
+      { role: "system", content: "Return only valid JSON array of questions." },
+      { role: "user", content: prompt },
+    ],
+    0.4
+  );
+
+  const cleaned = text.replace(/^```json\s*/i, "").replace(/```$/i, "").trim();
+  let questions: string[] = [];
   try {
-    // Prepare expense data for AI analysis
-    const expensesSummary = expenses.map((expense) => ({
-      amount: expense.amount,
-      category: expense.category,
-      description: expense.description,
-      date: expense.date,
-    }));
+    questions = JSON.parse(cleaned);
+  } catch {
+    questions = [];
+  }
+  return Array.isArray(questions) ? questions.slice(0, 6) : [];
+}
 
-    const prompt = `Analyze the following expense data and provide 3-4 actionable financial insights. 
-    Return a JSON array of insights with this structure:
-    {
-      "type": "warning|info|success|tip",
-      "title": "Brief title",
-      "message": "Detailed insight message with specific numbers when possible",
-      "action": "Actionable suggestion",
-      "confidence": 0.8
-    }
+/**
+ * Feedback on an individual audio answer transcript
+ */
+export async function analyzeAnswer(question: string, transcript: string) {
+  const prompt = `
+You are an interview evaluator. Analyze the candidate's spoken answer.
 
-    Expense Data:
-    ${JSON.stringify(expensesSummary, null, 2)}
+Return JSON with these fields:
+{
+  "accent": "brief note",
+  "fluency": "brief note",
+  "word_choice": "brief note",
+  "emotion": "brief note of tone/energy",
+  "clarity": "short note about clarity & structure",
+  "conciseness": "short note about length and relevance",
+  "confidence": "short note about confidence level",
+  "relevance": "short note about relevance to the question",
+  "examples": "note if examples/evidence were given",
+  "strengths": ["list of key strengths"],
+  "improvements": ["list of specific improvements"],
+  "recommendation": "short closing recommendation",
+  "overall_score": 1-10
+}
 
-    Focus on:
-    1. Spending patterns (day of week, categories)
-    2. Budget alerts (high spending areas)
-    3. Money-saving opportunities
-    4. Positive reinforcement for good habits
+If the transcript is empty or very short, return an overall_score of 0 and state that the user did not answer.
+  
+Question: "${question}"
+Transcript:
+"""
+${transcript}
+"""
+Return only JSON.
+`;
 
-    Return only valid JSON array, no additional text.`;
+  const text = await runWithFallback(
+    [
+      { role: "system", content: "Return only valid JSON." },
+      { role: "user", content: prompt },
+    ],
+    0.3
+  );
 
-    const completion = await openai.chat.completions.create({
-      model: 'deepseek/deepseek-chat-v3-0324:free',
-      messages: [
-        {
-          role: 'system',
-          content:
-            'You are a financial advisor AI that analyzes spending patterns and provides actionable insights. Always respond with valid JSON only.',
-        },
-        {
-          role: 'user',
-          content: prompt,
-        },
-      ],
-      temperature: 0.7,
-      max_tokens: 1000,
-    });
-
-    const response = completion.choices[0].message.content;
-    if (!response) {
-      throw new Error('No response from AI');
-    }
-
-    // Clean the response by removing markdown code blocks if present
-    let cleanedResponse = response.trim();
-    if (cleanedResponse.startsWith('```json')) {
-      cleanedResponse = cleanedResponse
-        .replace(/^```json\s*/, '')
-        .replace(/\s*```$/, '');
-    } else if (cleanedResponse.startsWith('```')) {
-      cleanedResponse = cleanedResponse
-        .replace(/^```\s*/, '')
-        .replace(/\s*```$/, '');
-    }
-
-    // Parse AI response
-    const insights = JSON.parse(cleanedResponse);
-
-    // Add IDs and ensure proper format
-    const formattedInsights = insights.map(
-      (insight: RawInsight, index: number) => ({
-        id: `ai-${Date.now()}-${index}`,
-        type: insight.type || 'info',
-        title: insight.title || 'AI Insight',
-        message: insight.message || 'Analysis complete',
-        action: insight.action,
-        confidence: insight.confidence || 0.8,
-      })
-    );
-
-    return formattedInsights;
-  } catch (error) {
-    console.error('❌ Error generating AI insights:', error);
-
-    // Fallback to mock insights if AI fails
-    return [
-      {
-        id: 'fallback-1',
-        type: 'info',
-        title: 'AI Analysis Unavailable',
-        message:
-          'Unable to generate personalized insights at this time. Please try again later.',
-        action: 'Refresh insights',
-        confidence: 0.5,
-      },
-    ];
+  const cleaned = text.replace(/^```json\s*/i, "").replace(/```$/i, "").trim();
+  try {
+    return JSON.parse(cleaned);
+  } catch {
+    return {
+      accent: "N/A",
+      fluency: "N/A",
+      word_choice: "N/A",
+      emotion: "N/A",
+      clarity: "N/A",
+      conciseness: "N/A",
+      confidence: "N/A",
+      relevance: "N/A",
+      examples: "N/A",
+      strengths: [],
+      improvements: [],
+      recommendation: "No valid response captured.",
+      overall_score: 0,
+    };
   }
 }
 
-export async function categorizeExpense(description: string): Promise<string> {
-  try {
-    const completion = await openai.chat.completions.create({
-      model: 'deepseek/deepseek-chat-v3-0324:free',
-      messages: [
-        {
-          role: 'system',
-          content:
-            'You are an expense categorization AI. Categorize expenses into one of these categories: Food, Transportation, Entertainment, Shopping, Bills, Healthcare, Other. Respond with only the category name.',
-        },
-        {
-          role: 'user',
-          content: `Categorize this expense: "${description}"`,
-        },
-      ],
-      temperature: 0.1,
-      max_tokens: 20,
-    });
+/**
+ * Overall feedback after all answers
+ */
+export async function analyzeInterview(transcripts: string[]) {
+  const prompt = `
+You are an experienced interview coach. Analyze the candidate's overall performance across ALL questions.
 
-    const category = completion.choices[0].message.content?.trim();
-
-    const validCategories = [
-      'Food',
-      'Transportation',
-      'Entertainment',
-      'Shopping',
-      'Bills',
-      'Healthcare',
-      'Other',
-    ];
-
-    const finalCategory = validCategories.includes(category || '')
-      ? category!
-      : 'Other';
-    return finalCategory;
-  } catch (error) {
-    console.error('❌ Error categorizing expense:', error);
-    return 'Other';
-  }
+Return JSON with:
+{
+  "summary": "short overview of performance",
+  "strengths": ["list of overall strengths"],
+  "improvements": ["list of overall improvements"],
+  "communication": "note about clarity, tone, and engagement",
+  "consistency": "note about consistency across answers",
+  "examples_usage": "note about how well they supported answers with examples",
+  "final_recommendation": "short closing recommendation",
+  "overall_score": 1-10
 }
 
-export async function generateAIAnswer(
-  question: string,
-  context: ExpenseRecord[]
-): Promise<string> {
+Here are the transcripts of all answers:
+${JSON.stringify(transcripts, null, 2)}
+
+Return only JSON.
+`;
+
+  const text = await runWithFallback(
+    [
+      { role: "system", content: "Return only JSON." },
+      { role: "user", content: prompt },
+    ],
+    0.4
+  );
+
+  const cleaned = text.replace(/^```json\s*/i, "").replace(/```$/i, "").trim();
+
   try {
-    const expensesSummary = context.map((expense) => ({
-      amount: expense.amount,
-      category: expense.category,
-      description: expense.description,
-      date: expense.date,
-    }));
-
-    const prompt = `Based on the following expense data, provide a detailed and actionable answer to this question: "${question}"
-
-    Expense Data:
-    ${JSON.stringify(expensesSummary, null, 2)}
-
-    Provide a comprehensive answer that:
-    1. Addresses the specific question directly
-    2. Uses concrete data from the expenses when possible
-    3. Offers actionable advice
-    4. Keeps the response concise but informative (2-3 sentences)
-    
-    Return only the answer text, no additional formatting.`;
-
-    const completion = await openai.chat.completions.create({
-      model: 'deepseek/deepseek-chat-v3-0324:free',
-      messages: [
-        {
-          role: 'system',
-          content:
-            'You are a helpful financial advisor AI that provides specific, actionable answers based on expense data. Be concise but thorough.',
-        },
-        {
-          role: 'user',
-          content: prompt,
-        },
-      ],
-      temperature: 0.7,
-      max_tokens: 200,
-    });
-
-    const response = completion.choices[0].message.content;
-    if (!response) {
-      throw new Error('No response from AI');
-    }
-
-    return response.trim();
-  } catch (error) {
-    console.error('❌ Error generating AI answer:', error);
-    return "I'm unable to provide a detailed answer at the moment. Please try refreshing the insights or check your connection.";
+    return JSON.parse(cleaned);
+  } catch {
+    return {
+      summary: "Could not analyze answers properly.",
+      strengths: [],
+      improvements: [],
+      communication: "N/A",
+      consistency: "N/A",
+      examples_usage: "N/A",
+      final_recommendation: "Try again with more complete responses.",
+      overall_score: 0,
+    };
   }
 }

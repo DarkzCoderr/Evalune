@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,24 +8,54 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  clerkUserId String   @unique
-  email     String   @unique
-  name      String?
-  imageUrl String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  Records  Record[]
+  id          String      @id @default(uuid())
+  clerkUserId String      @unique
+  email       String      @unique
+  name        String?
+  imageUrl    String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  interviews  Interview[]
+  resumes     Resume[]
 }
 
-model Record {
-  id        String   @id @default(uuid())
-  text      String
-  amount    Float
-  category  String @default("Other")
-  date      DateTime @default(now())
-  userId    String
-  user      User    @relation(fields: [userId], references: [clerkUserId], onDelete: Cascade)
-  createdAt DateTime @default(now())
+model Resume {
+  id         String      @id @default(uuid())
+  fileName   String
+  parsedJson Json
+  userId     String
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  interviews Interview[]
+  user       User        @relation(fields: [userId], references: [clerkUserId], onDelete: Cascade)
+}
+
+model Interview {
+  id          String    @id @default(uuid())
+  resumeId    String
+  userId      String
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+  feedback    Json?
+  questions   Json
+  score       Float?
+  answers     Answer[]
+  resume      Resume    @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [clerkUserId], onDelete: Cascade)
+
   @@index([userId])
+  @@index([resumeId])
+}
+
+model Answer {
+  id            String    @id @default(uuid())
+  question      String
+  transcript    String
+  aiFeedback    Json?
+  questionIndex Int
+  createdAt     DateTime  @default(now())
+  interviewId   String
+  interview     Interview @relation(fields: [interviewId], references: [id], onDelete: Cascade)
+
+  @@index([interviewId])
 }

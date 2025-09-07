@@ -14,12 +14,12 @@ const ContactPage = () => {
           <h1 className='text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-4 sm:mb-6 text-gray-900 dark:text-gray-100 leading-tight'>
             Contact{' '}
             <span className='bg-gradient-to-r from-emerald-600 via-green-500 to-teal-500 bg-clip-text text-transparent'>
-              ExpenseTracker AI
+              Evalune
             </span>
           </h1>
           <p className='text-base sm:text-lg md:text-xl lg:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed px-2 sm:px-0'>
-            Have questions about AI-powered expense tracking or need help?
-            We&#39;re here to assist you with intelligent financial management.
+            Have questions about AI-powered interview preparation or need assistance? 
+            We're here to help you practice smarter and improve your interview skills.
           </p>
           <div className='mt-6 sm:mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-2 sm:px-0'>
             <a
@@ -59,8 +59,7 @@ const ContactPage = () => {
               </span>
             </h2>
             <p className='text-sm sm:text-base md:text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto px-2 sm:px-0'>
-              Choose the most convenient way to reach out to our ExpenseTracker
-              AI support team.
+              Choose the most convenient way to reach out to our Evalune support team.
             </p>
           </div>
 
@@ -83,7 +82,7 @@ const ContactPage = () => {
                   className='inline-flex items-center gap-2 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-medium transition-colors duration-200 text-sm sm:text-base break-all sm:break-normal'
                 >
                   <span className='hidden sm:inline'>
-                    support@expensetracker-ai.com
+                    support@Evalune.com
                   </span>
                   <span className='sm:hidden'>Email Us</span>
                   <span className='text-sm'>→</span>
@@ -128,9 +127,9 @@ const ContactPage = () => {
                   partnership discussions.
                 </p>
                 <div className='text-emerald-600 dark:text-emerald-400 font-medium text-sm sm:text-base'>
-                  123 AI Innovation St
+                  BCA Department
                   <br />
-                  Tech City, USA
+                  HICAS, Coimbatore
                 </div>
               </div>
             </div>

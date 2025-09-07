@@ -9,7 +9,7 @@ const AboutPage = () => {
         <div className='relative z-10 max-w-4xl mx-auto w-full'>
           <div className='inline-flex items-center gap-2 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium mb-4 sm:mb-6 shadow-lg'>
             <span className='w-1.5 h-1.5 sm:w-2 sm:h-2 bg-emerald-500 dark:bg-emerald-400 rounded-full animate-pulse'></span>
-            <span className='hidden sm:inline'>Powered by AI Technology</span>
+            <span className='hidden sm:inline'>AI-Powered Virtual Interviewer</span>
             <span className='sm:hidden'>AI Technology</span>
           </div>
           <h1 className='text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-4 sm:mb-6 text-gray-900 dark:text-gray-100 leading-tight'>
@@ -19,8 +19,9 @@ const AboutPage = () => {
             </span>
           </h1>
           <p className='text-base sm:text-lg md:text-xl lg:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed px-2 sm:px-0'>
-            Your intelligent companion for tracking expenses and managing your
-            finances with cutting-edge AI-powered insights.
+            Your intelligent companion for mastering interviews, 
+            offering AI-powered resume analysis, personalized questions, 
+            and detailed feedback to help you succeed.
           </p>
           <div className='mt-6 sm:mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-2 sm:px-0'>
             <Link
@@ -49,15 +50,14 @@ const AboutPage = () => {
             Our Mission
           </div>
           <h2 className='text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 sm:mb-8 text-gray-900 dark:text-gray-100 px-2 sm:px-0'>
-            Transforming Financial Management with{' '}
+            Empowering Students to Ace Interviews with {' '}
             <span className='text-emerald-600 dark:text-emerald-400'>AI</span>
           </h2>
           <p className='text-lg md:text-xl text-gray-600 dark:text-gray-400 leading-relaxed max-w-3xl mx-auto'>
-            At ExpenseTracker AI, we leverage cutting-edge artificial
-            intelligence to revolutionize how individuals achieve financial
-            wellness. Our AI analyzes your spending patterns to deliver
-            personalized recommendations and actionable insights that lead to
-            better budgeting and financial freedom.
+            At Evalune, we harness advanced AI to transform how students prepare for interviews. 
+            Our platform analyzes resumes, generates personalized questions, 
+            evaluates responses, and provides actionable feedback to help 
+            students build confidence and improve performance.
           </p>
           <div className='mt-10 grid grid-cols-1 md:grid-cols-3 gap-6'>
             <div className='bg-gradient-to-br from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 p-6 rounded-2xl border border-emerald-100 dark:border-emerald-800/50'>
@@ -70,10 +70,10 @@ const AboutPage = () => {
             </div>
             <div className='bg-gradient-to-br from-green-50 to-teal-50 dark:from-green-900/20 dark:to-teal-900/20 p-6 rounded-2xl border border-green-100 dark:border-green-800/50'>
               <div className='text-3xl font-bold text-green-600 dark:text-green-400 mb-2'>
-                $2M+
+                5000+
               </div>
               <div className='text-gray-600 dark:text-gray-400 font-medium'>
-                Money Tracked
+                Interviews Practiced
               </div>
             </div>
             <div className='bg-gradient-to-br from-teal-50 to-emerald-50 dark:from-teal-900/20 dark:to-emerald-900/20 p-6 rounded-2xl border border-teal-100 dark:border-teal-800/50'>
@@ -99,12 +99,12 @@ const AboutPage = () => {
             <h2 className='text-4xl md:text-5xl font-bold mb-6 text-gray-900 dark:text-gray-100'>
               Why Choose{' '}
               <span className='text-emerald-600 dark:text-emerald-400'>
-                ExpenseTracker AI?
+                Evalune?
               </span>
             </h2>
             <p className='text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto'>
-              Discover the powerful features that make our AI-driven platform
-              the smart choice for modern financial management.
+              Discover the powerful features that make our 
+              AI-driven platform the smart choice for students preparing for interviews.
             </p>
           </div>
 
@@ -116,12 +116,12 @@ const AboutPage = () => {
                   <span className='text-white text-xl'>🤖</span>
                 </div>
                 <h3 className='text-xl font-bold mb-4 text-gray-900 dark:text-gray-100'>
-                  AI-Powered Insights
+                  AI-Powered Feedback
                 </h3>
                 <p className='text-gray-600 dark:text-gray-400 leading-relaxed'>
-                  Get intelligent analysis of your spending patterns with
-                  personalized AI recommendations and automated category
-                  suggestions that learn from your behavior.
+                  Receive intelligent analysis of your answers, 
+                  with personalized feedback and tips that help you 
+                  improve communication, confidence, and overall performance.
                 </p>
               </div>
             </div>
@@ -133,12 +133,12 @@ const AboutPage = () => {
                   <span className='text-white text-xl'>✨</span>
                 </div>
                 <h3 className='text-xl font-bold mb-4 text-gray-900 dark:text-gray-100'>
-                  Smart Categorization
+                  Personalized Question Generation
                 </h3>
                 <p className='text-gray-600 dark:text-gray-400 leading-relaxed'>
-                  Let our AI automatically categorize your expenses with 99%
-                  accuracy and provide tailored recommendations to enhance your
-                  budget management effortlessly.
+                  Our AI creates interview questions based on your resume, 
+                  simulating real HR interviews and allowing you to 
+                  practice effectively for any role.
                 </p>
               </div>
             </div>
@@ -150,12 +150,12 @@ const AboutPage = () => {
                   <span className='text-white text-xl'>📊</span>
                 </div>
                 <h3 className='text-xl font-bold mb-4 text-gray-900 dark:text-gray-100'>
-                  Intelligent Dashboard
+                  Smart Performance Dashboard
                 </h3>
                 <p className='text-gray-600 dark:text-gray-400 leading-relaxed'>
-                  Experience a modern, AI-enhanced interface with real-time
-                  insights, interactive financial analytics, and beautiful
-                  visualizations that make sense of your data.
+                  Track your progress with an intuitive dashboard, 
+                  featuring detailed insights, progress tracking, 
+                  and visual feedback to monitor improvement over multiple attempts.
                 </p>
               </div>
             </div>
@@ -177,7 +177,7 @@ const AboutPage = () => {
             <h2 className='text-4xl md:text-5xl font-bold mb-8 text-gray-900 dark:text-gray-100'>
               Built for the{' '}
               <span className='text-emerald-600 dark:text-emerald-400'>
-                Future
+                Future of Interview Preparation
               </span>
             </h2>
           </div>
@@ -185,17 +185,17 @@ const AboutPage = () => {
           <div className='grid grid-cols-1 md:grid-cols-2 gap-12 items-center'>
             <div className='space-y-6'>
               <p className='text-lg text-gray-600 dark:text-gray-400 leading-relaxed'>
-                ExpenseTracker AI was born from the vision of creating truly
-                intelligent financial management tools. Our team of financial
-                experts, data scientists, and technologists came together to
-                solve a critical problem: making personal finance management
-                smarter, more intuitive, and more effective.
+                Evalune was born from the vision of creating an intelligent, 
+                AI-driven platform to help students excel in interviews. 
+                Our team of educators, AI specialists, and technologists came 
+                together to solve a critical challenge: making interview practice 
+                more personalized, effective, and accessible.
               </p>
               <p className='text-lg text-gray-600 dark:text-gray-400 leading-relaxed'>
-                Since our launch, we&#39;ve helped thousands of users achieve
-                better budgeting and improve their overall financial health
-                through the power of artificial intelligence. Every feature is
-                designed with user experience and financial wellness in mind.
+                Since our launch, we've empowered thousands of students to 
+                improve their answers, build confidence, and track their progress 
+                through AI-powered feedback and personalized question generation. 
+                Every feature is designed with students and their success in mind.
               </p>
               <div className='flex items-center gap-4 pt-4'>
                 <div className='flex -space-x-2'>
@@ -204,7 +204,7 @@ const AboutPage = () => {
                   <div className='w-10 h-10 bg-gradient-to-br from-teal-500 to-emerald-500 rounded-full border-2 border-white dark:border-gray-800'></div>
                 </div>
                 <div className='text-sm text-gray-600 dark:text-gray-400'>
-                  <div className='font-semibold'>Trusted by 10,000+ users</div>
+                  <div className='font-semibold'>Trusted by 10,000+ students</div>
                   <div>Join our growing community</div>
                 </div>
               </div>
@@ -215,7 +215,7 @@ const AboutPage = () => {
                 <div className='flex items-center gap-4'>
                   <div className='w-3 h-3 bg-emerald-500 dark:bg-emerald-400 rounded-full'></div>
                   <div className='text-gray-900 dark:text-gray-100 font-medium'>
-                    Founded in 2024
+                    Founded in 2025
                   </div>
                 </div>
                 <div className='flex items-center gap-4'>
@@ -233,7 +233,7 @@ const AboutPage = () => {
                 <div className='flex items-center gap-4'>
                   <div className='w-3 h-3 bg-emerald-500 dark:bg-emerald-400 rounded-full'></div>
                   <div className='text-gray-900 dark:text-gray-100 font-medium'>
-                    User-Centric Design
+                    student-Centric Design
                   </div>
                 </div>
               </div>
@@ -250,20 +250,20 @@ const AboutPage = () => {
         <div className='max-w-4xl mx-auto text-center relative z-10'>
           <div className='inline-flex items-center gap-2 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 px-4 py-2 rounded-full text-sm font-medium mb-6 shadow-lg'>
             <span className='w-2 h-2 bg-emerald-500 dark:bg-emerald-400 rounded-full animate-pulse'></span>
-            Ready to Transform Your Finances?
+            Ready to Ace Your Interviews?
           </div>
 
           <h2 className='text-4xl md:text-6xl font-bold mb-6 leading-tight text-gray-900 dark:text-gray-100'>
             Take Control of Your{' '}
             <span className='bg-gradient-to-r from-emerald-600 via-green-500 to-teal-500 bg-clip-text text-transparent'>
-              Financial Future
+              Interview Preparation
             </span>
           </h2>
 
           <p className='text-xl md:text-2xl mb-10 text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed'>
-            Join thousands of users who have already transformed their financial
-            habits with ExpenseTracker AI. Start your journey towards smarter
-            budgeting today.
+            Join thousands of students who have already boosted their 
+            confidence and improved their interview skills with Evalune. 
+            Start your journey toward smarter, AI-powered practice today.
           </p>
 
           <div className='flex flex-col sm:flex-row gap-6 justify-center items-center'>

@@ -15,13 +15,13 @@ const Footer = () => {
                 <span className='text-white text-lg'>💰</span>
               </div>
               <h2 className='text-xl font-bold bg-gradient-to-r from-emerald-600 via-green-500 to-teal-500 bg-clip-text text-transparent'>
-                ExpenseTracker AI
+                Evalune
               </h2>
             </div>
             <p className='text-gray-600 dark:text-gray-400 leading-relaxed max-w-sm'>
-              Intelligent financial management powered by AI. Track your
-              expenses, manage your budget, and gain insights into your spending
-              patterns.
+              Intelligent interview preparation powered by AI. 
+              Analyze your resume, practice with personalized questions, 
+              and receive actionable feedback to improve your performance.
             </p>
           </div>
 
@@ -71,7 +71,7 @@ const Footer = () => {
                 <div className='w-5 h-5 bg-gradient-to-br from-green-500 to-teal-500 rounded-md flex items-center justify-center shadow-sm'>
                   <span className='text-white text-xs'>✨</span>
                 </div>
-                Smart Categorization
+                Auto Question Generation
               </div>
               <div className='flex items-center gap-3 text-gray-600 dark:text-gray-400 text-sm'>
                 <div className='w-5 h-5 bg-gradient-to-br from-teal-500 to-emerald-500 rounded-md flex items-center justify-center shadow-sm'>
@@ -90,7 +90,7 @@ const Footer = () => {
         <div className='flex flex-col md:flex-row justify-between items-center'>
           <div className='text-center md:text-left mb-4 md:mb-0'>
             <p className='text-gray-500 dark:text-gray-400 text-sm'>
-              © {new Date().getFullYear()} ExpenseTracker AI. All rights
+              © {new Date().getFullYear()} Evalune. All rights
               reserved.
             </p>
           </div>
@@ -98,7 +98,7 @@ const Footer = () => {
           <div className='flex items-center gap-4'>
             <div className='inline-flex items-center gap-2 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 px-3 py-1 rounded-full text-xs font-medium'>
               <span className='w-1.5 h-1.5 bg-emerald-500 dark:bg-emerald-400 rounded-full animate-pulse'></span>
-              Made by BCA Payaluga
+              Made by BCA Folks
             </div>
           </div>
         </div>

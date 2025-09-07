@@ -17,9 +17,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'ExpenseTracker AI - Smart Financial Management',
+  title: 'Evalune - Virtual Interviewer',
   description:
-    'AI-powered expense tracking app with intelligent insights, smart categorization, and personalized financial recommendations',
+    'AI-powered virtual interviewer app with intelligent insights, smart analysis, and personalized interview recommendations',
 };
 
 export default function RootLayout({
