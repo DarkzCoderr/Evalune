@@ -192,7 +192,7 @@ const AboutPage = () => {
                 more personalized, effective, and accessible.
               </p>
               <p className='text-lg text-gray-600 dark:text-gray-400 leading-relaxed'>
-                Since our launch, we've empowered thousands of students to 
+                Since our launch, we have empowered thousands of students to 
                 improve their answers, build confidence, and track their progress 
                 through AI-powered feedback and personalized question generation. 
                 Every feature is designed with students and their success in mind.
