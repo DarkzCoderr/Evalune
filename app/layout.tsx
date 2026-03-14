@@ -1,3 +1,12 @@
+/**
+ * Global Neutralization: Fixes broken localStorage in some Node environments.
+ * This ensures that server-side code (and libraries) correctly identify that
+ * they are NOT in a browser environment.
+ */
+if (typeof global !== 'undefined' && (global as any).localStorage && !(global as any).localStorage.getItem) {
+  delete (global as any).localStorage;
+}
+
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
@@ -34,10 +43,16 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                const theme = localStorage.getItem('theme') || 
-                  (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-                if (theme === 'dark') {
-                  document.documentElement.classList.add('dark');
+                try {
+                  const hasLS = typeof localStorage !== 'undefined' && localStorage && typeof localStorage.getItem === 'function';
+                  const savedTheme = hasLS ? localStorage.getItem('theme') : null;
+                  const theme = savedTheme || 
+                    (window.matchMedia && typeof window.matchMedia === 'function' && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                  if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                  }
+                } catch (e) {
+                  console.error('Theme detection failed:', e);
                 }
               })();
             `,

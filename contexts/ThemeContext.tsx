@@ -18,19 +18,21 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     setMounted(true);
     // Check localStorage first, then system preference
-    const savedTheme = localStorage.getItem('theme') as Theme;
-    if (savedTheme) {
-      setTheme(savedTheme);
-    } else {
-      const systemPrefersDark = window.matchMedia(
-        '(prefers-color-scheme: dark)'
-      ).matches;
-      setTheme(systemPrefersDark ? 'dark' : 'light');
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined' && localStorage && typeof localStorage.getItem === 'function') {
+      const savedTheme = localStorage.getItem('theme') as Theme;
+      if (savedTheme) {
+        setTheme(savedTheme);
+      } else if (window.matchMedia && typeof window.matchMedia === 'function') {
+        const systemPrefersDark = window.matchMedia(
+          '(prefers-color-scheme: dark)'
+        ).matches;
+        setTheme(systemPrefersDark ? 'dark' : 'light');
+      }
     }
   }, []);
 
   useEffect(() => {
-    if (mounted) {
+    if (mounted && typeof window !== 'undefined' && typeof localStorage !== 'undefined' && localStorage && typeof localStorage.setItem === 'function') {
       localStorage.setItem('theme', theme);
       if (theme === 'dark') {
         document.documentElement.classList.add('dark');

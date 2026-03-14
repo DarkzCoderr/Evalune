@@ -68,7 +68,7 @@ ${JSON.stringify(parsed, null, 2)}
   try {
     questions = JSON.parse(cleaned);
   } catch {
-    questions = [];
+    questions = []; 
   }
   return Array.isArray(questions) ? questions.slice(0, 6) : [];
 }
