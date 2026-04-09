@@ -3,6 +3,15 @@
 
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
+
+function asRecord(
+  value: Prisma.JsonValue | null | undefined
+): Record<string, unknown> | null {
+  return typeof value === "object" && value !== null && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : null;
+}
 
 /**
  * Server action that returns sanitized dashboard data for the current user.
@@ -23,7 +32,7 @@ export async function getDashboardData() {
 
   const sanitized = interviews.map((it) => {
     // `it.feedback` is a Json field (could be null or an object)
-    const fb = it.feedback as any | null;
+    const fb = asRecord(it.feedback as Prisma.JsonValue | null);
 
     // Try to read overall_score from interview.feedback if present
     let overall_score: number | null = null;
@@ -47,7 +56,7 @@ export async function getDashboardData() {
       const scoresFromAnswers = it.answers
         .map((a) => {
           try {
-            const ai = a.aiFeedback as any;
+            const ai = asRecord(a.aiFeedback as Prisma.JsonValue | null);
             if (!ai) return null;
             if (typeof ai.overall_score === "number") return ai.overall_score;
             if (typeof ai.overall_score === "string") {

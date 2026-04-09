@@ -11,7 +11,6 @@ export async function submitAnswer(formData: FormData) {
 
   const interviewId = formData.get("interviewId") as string;
   const questionIndex = Number(formData.get("questionIndex"));
-  const audio = formData.get("audio") as File | null;
   let transcript = (formData.get("transcript") as string) || "";
 
   if (!interviewId || Number.isNaN(questionIndex)) throw new Error("Bad payload");

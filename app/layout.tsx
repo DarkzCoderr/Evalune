@@ -3,8 +3,15 @@
  * This ensures that server-side code (and libraries) correctly identify that
  * they are NOT in a browser environment.
  */
-if (typeof global !== 'undefined' && (global as any).localStorage && !(global as any).localStorage.getItem) {
-  delete (global as any).localStorage;
+const globalWithMaybeLocalStorage = globalThis as unknown as {
+  localStorage?: Storage;
+};
+if (
+  typeof globalThis !== 'undefined' &&
+  globalWithMaybeLocalStorage.localStorage &&
+  typeof globalWithMaybeLocalStorage.localStorage.getItem !== 'function'
+) {
+  delete globalWithMaybeLocalStorage.localStorage;
 }
 
 import type { Metadata } from 'next';

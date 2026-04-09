@@ -6,10 +6,34 @@ import { submitAnswer } from "@/app/actions/submitAnswer";
 import { finalizeInterview } from "@/app/actions/finalizeInterview";
 
 // ✅ SpeechRecognition shim for TS
+type SpeechRecognitionResultLike = {
+  0: { transcript: string };
+};
+
+type SpeechRecognitionEventLike = {
+  results: ArrayLike<SpeechRecognitionResultLike>;
+};
+
+type SpeechRecognitionLike = {
+  lang: string;
+  interimResults: boolean;
+  onresult: ((event: SpeechRecognitionEventLike) => void) | null;
+  start: () => void;
+  stop: () => void;
+};
+
+type SpeechRecognitionCtor = new () => SpeechRecognitionLike;
+
+type InterviewFeedback = {
+  summary: string;
+  strengths: string[];
+  improvements: string[];
+  overall_score: number;
+};
 declare global {
   interface Window {
-    webkitSpeechRecognition: any;
-    SpeechRecognition: any;
+    webkitSpeechRecognition?: SpeechRecognitionCtor;
+    SpeechRecognition?: SpeechRecognitionCtor;
   }
 }
 
@@ -24,10 +48,10 @@ export default function Interview({ resumeId }: { resumeId: string }) {
   const [transcripts, setTranscripts] = useState<string[]>([]);
   const [answersSubmitted, setAnswersSubmitted] = useState<boolean[]>([]);
 
-  const [finalFeedback, setFinalFeedback] = useState<any | null>(null);
+  const [finalFeedback, setFinalFeedback] = useState<InterviewFeedback | null>(null);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
 
   // Start interview: generate questions
   const begin = async () => {
@@ -81,13 +105,17 @@ export default function Interview({ resumeId }: { resumeId: string }) {
       // Setup speech recognition
       const SpeechRecognition =
         window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        setStatus("Speech recognition is not supported in this browser.");
+        return;
+      }
       const recognition = new SpeechRecognition();
       recognition.lang = "en-US";
       recognition.interimResults = true;
 
-      recognition.onresult = (event: any) => {
+      recognition.onresult = (event: SpeechRecognitionEventLike) => {
         const transcript = Array.from(event.results)
-          .map((r: any) => r[0].transcript)
+          .map((r) => r[0].transcript)
           .join(" ");
         setTranscripts((prev) => {
           const updated = [...prev];

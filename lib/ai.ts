@@ -37,12 +37,14 @@ async function runWithFallback(
   const errors: string[] = [];
 
   try {
-    const r = await openrouter.chat.completions.create({
+    const requestPayload = {
       model: PRIMARY_MODEL,
       messages,
       temperature,
       extra_body: FALLBACK_MODELS.length ? { models: FALLBACK_MODELS } : undefined,
-    });
+    } as unknown as Parameters<typeof openrouter.chat.completions.create>[0];
+
+    const r = await openrouter.chat.completions.create(requestPayload);
     const content = r.choices[0]?.message?.content?.trim() || "";
     if (!content) {
       errors.push(`Primary model ${PRIMARY_MODEL} returned empty content`);
@@ -215,7 +217,9 @@ Return only JSON.
 /**
  * Overall feedback after all answers
  */
-export async function analyzeInterview(transcripts: string[]) {
+export async function analyzeInterview(
+  transcripts: Array<{ question: string; transcript: string }>
+) {
   const prompt = `
 You are an experienced interview coach. Analyze the candidate's overall performance across ALL questions.
 

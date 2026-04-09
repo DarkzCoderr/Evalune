@@ -123,7 +123,9 @@ return {
                   <XAxis dataKey="date" />
                   <YAxis domain={[0, 10]} />
                   <Tooltip
-                    formatter={(val: any) => (val === null || val === undefined ? "—" : val)}
+                    formatter={(val) =>
+                      val === null || val === undefined ? "—" : val
+                    }
                   />
                   <Legend />
                   <Line
