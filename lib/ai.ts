@@ -1,6 +1,11 @@
 // lib/ai.ts
 import OpenAI from "openai";
 
+function getErrorMessage(err: unknown): string {
+  if (err instanceof Error) return err.message;
+  return String(err);
+}
+
 /**
  * OpenRouter client (for free LLMs like Mistral, LLaMA, etc.)
  */
@@ -14,38 +19,65 @@ export const openrouter = new OpenAI({
 });
 
 // -------------------------------
-// Free LLM models (fallback order)
+// Model routing config
 // -------------------------------
-const FREE_MODELS = [
-  "mistralai/mistral-7b-instruct:free",
-  "meta-llama/llama-3-8b-instruct:free",
-  "mistralai/mixtral-8x7b-instruct:free",
-];
+const PRIMARY_MODEL = process.env.OPENROUTER_PRIMARY_MODEL || "openrouter/free";
+const FALLBACK_MODELS = (process.env.OPENROUTER_FALLBACK_MODELS || "")
+  .split(",")
+  .map((m) => m.trim())
+  .filter(Boolean);
 
 /**
  * Run OpenRouter call with model fallback
  */
-async function runWithFallback(messages: any[], temperature = 0.4): Promise<string> {
-  for (const model of FREE_MODELS) {
-    try {
-      const r = await openrouter.chat.completions.create({
-        model,
-        messages,
-        temperature,
-      });
-      return r.choices[0]?.message?.content?.trim() || "";
-    } catch (err: any) {
-      console.warn(`⚠️ ${model} failed:`, err.message || err);
-      await new Promise((res) => setTimeout(res, 1200));
+async function runWithFallback(
+  messages: Array<{ role: "system" | "user" | "assistant"; content: string }>,
+  temperature = 0.4
+): Promise<string> {
+  const errors: string[] = [];
+
+  try {
+    const r = await openrouter.chat.completions.create({
+      model: PRIMARY_MODEL,
+      messages,
+      temperature,
+      extra_body: FALLBACK_MODELS.length ? { models: FALLBACK_MODELS } : undefined,
+    });
+    const content = r.choices[0]?.message?.content?.trim() || "";
+    if (!content) {
+      errors.push(`Primary model ${PRIMARY_MODEL} returned empty content`);
+      throw new Error(`Model ${PRIMARY_MODEL} returned empty content`);
     }
+    return content;
+  } catch (err: unknown) {
+    const message = getErrorMessage(err);
+    errors.push(`${PRIMARY_MODEL}: ${message}`);
+    console.warn("[ai.runWithFallback] Model request failed", {
+      model: PRIMARY_MODEL,
+      fallbackModels: FALLBACK_MODELS,
+      message,
+    });
   }
-  return "";
+
+  const aggregateError = new Error(
+    `Model routing failed or returned empty output. Attempts: ${errors.join(" | ")}`
+  );
+  (aggregateError as Error & { details?: string[] }).details = errors;
+  throw aggregateError;
 }
 
 /**
  * Generate 4–6 interview questions from parsed resume JSON
  */
-export async function generateQuestionsFromResume(parsed: any): Promise<string[]> {
+export async function generateQuestionsFromResume(parsed: unknown): Promise<string[]> {
+  if (!process.env.OPENROUTER_API_KEY) {
+    throw new Error("Missing OPENROUTER_API_KEY");
+  }
+
+  if (parsed == null || typeof parsed !== "object") {
+    throw new Error("Invalid resume parsedJson: expected a non-null object");
+  }
+
   const prompt = `
 You are an interview coach. Generate 4-6 targeted interview questions based on this resume JSON.
 
@@ -55,22 +87,65 @@ Resume JSON:
 ${JSON.stringify(parsed, null, 2)}
 `;
 
-  const text = await runWithFallback(
-    [
-      { role: "system", content: "Return only valid JSON array of questions." },
-      { role: "user", content: prompt },
-    ],
-    0.4
-  );
+  let text = "";
+  try {
+    text = await runWithFallback(
+      [
+        { role: "system", content: "Return only valid JSON array of questions." },
+        { role: "user", content: prompt },
+      ],
+      0.4
+    );
+  } catch (err: unknown) {
+    console.error("[ai.generateQuestionsFromResume] AI call failed", {
+      error: getErrorMessage(err),
+      parsedPreview: JSON.stringify(parsed).slice(0, 500),
+    });
+    throw new Error(`Question generation AI call failed: ${getErrorMessage(err)}`);
+  }
 
   const cleaned = text.replace(/^```json\s*/i, "").replace(/```$/i, "").trim();
-  let questions: string[] = [];
+
+  if (!cleaned) {
+    console.error("[ai.generateQuestionsFromResume] Empty AI response after cleaning", {
+      rawText: text,
+    });
+    throw new Error("Question generation returned empty content");
+  }
+
+  let questions: unknown;
   try {
     questions = JSON.parse(cleaned);
-  } catch {
-    questions = []; 
+  } catch (err: unknown) {
+    console.error("[ai.generateQuestionsFromResume] Failed to parse AI JSON", {
+      error: getErrorMessage(err),
+      cleanedPreview: cleaned.slice(0, 1000),
+    });
+    throw new Error("Question generation returned invalid JSON");
   }
-  return Array.isArray(questions) ? questions.slice(0, 6) : [];
+
+  if (!Array.isArray(questions)) {
+    console.error("[ai.generateQuestionsFromResume] AI output was not an array", {
+      outputType: typeof questions,
+      outputPreview: JSON.stringify(questions).slice(0, 1000),
+    });
+    throw new Error("Question generation did not return an array");
+  }
+
+  const normalized = questions
+    .filter((q): q is string => typeof q === "string")
+    .map((q) => q.trim())
+    .filter(Boolean)
+    .slice(0, 6);
+
+  if (!normalized.length) {
+    console.error("[ai.generateQuestionsFromResume] Parsed array contains no valid question strings", {
+      outputPreview: JSON.stringify(questions).slice(0, 1000),
+    });
+    throw new Error("Question generation returned no usable questions");
+  }
+
+  return normalized;
 }
 
 /**

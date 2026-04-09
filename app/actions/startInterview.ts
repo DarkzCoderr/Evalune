@@ -18,8 +18,20 @@ export async function startInterview(resumeId: string) {
   if (!resume) throw new Error("Resume not found");
 
   // Generate questions with AI
-  const questions = await generateQuestionsFromResume(resume.parsedJson);
-  if (!questions.length) throw new Error("Could not generate questions");
+  let questions: string[];
+  try {
+    questions = await generateQuestionsFromResume(resume.parsedJson);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error("[startInterview] Failed to generate questions", {
+      resumeId: resume.id,
+      userId,
+      error: message,
+      parsedJsonType: typeof resume.parsedJson,
+      parsedJsonPreview: JSON.stringify(resume.parsedJson).slice(0, 500),
+    });
+    throw new Error(`Could not generate questions: ${message}`);
+  }
 
   // Create a new interview record
   const interview = await prisma.interview.create({
